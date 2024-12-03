@@ -20,4 +20,8 @@ Route::prefix('explorer')->group(function () {
     
     // File Preview
     Route::get('/preview', [FileExplorerController::class, 'preview'])->name('explorer.preview');
+
+    // Create New Folder
+    Route::post('/explorer/create-folder', [FileExplorerController::class, 'createFolder'])->name('explorer.create-folder');
+
 });

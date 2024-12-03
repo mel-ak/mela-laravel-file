@@ -79,4 +79,31 @@ class FileExplorerController extends Controller
 
         return view('explorer.index', compact('directories', 'path', 'breadcrumbs'));
     }
+
+    public function createFolder(Request $request)
+    {
+        $request->validate([
+            'folder_name' => 'required|string|max:255',
+            'path' => 'required|string',
+        ]);
+    
+        $path = $request->input('path');
+        $folderName = $request->input('folder_name');
+        $fullPath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+    
+        if (!is_dir($path)) {
+            return redirect()->route('explorer.index')->withErrors(['Invalid path.']);
+        }
+    
+        if (file_exists($fullPath)) {
+            return redirect()->route('explorer.index')->withErrors(['Folder already exists.']);
+        }
+    
+        if (mkdir($fullPath, 0777, true)) {
+            return redirect()->route('explorer.navigate', ['path' => $fullPath])->with('success', 'Folder created successfully.');
+        } else {
+            return redirect()->route('explorer.index')->withErrors(['Failed to create folder.']);
+        }
+    }
+
 }

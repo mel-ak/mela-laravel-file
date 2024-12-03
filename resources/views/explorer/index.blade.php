@@ -57,6 +57,15 @@
             <div class="bg-blue-600 h-2" style="width: 0%;" id="progress-bar"></div>
         </div>
 
+        <!-- Create Folder Form -->
+        <form action="{{ route('explorer.create-folder') }}" method="POST" class="mb-6">
+            @csrf
+            <input type="hidden" name="path" value="{{ $path }}">
+            <input type="text" name="folder_name" placeholder="Enter folder name"
+                   class="mb-2 p-2 border rounded w-full">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Create Folder</button>
+        </form>
+
         <!-- File/Directory Listing -->
         @if (count($directories) === 0)
             <p class="text-center text-gray-500">This directory is empty.</p>
