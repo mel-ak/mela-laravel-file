@@ -1,4 +1,4 @@
-# Laravel File and Directory Explorer
+# Mela File and Directory Explorer
 
 This project is a simple file and directory explorer built with Laravel and styled using Tailwind CSS. The application allows users to navigate through directories, view files, and interact with a file system interface.
 
@@ -10,6 +10,10 @@ This project is a simple file and directory explorer built with Laravel and styl
 -   **File Listing**: View files within the selected directory.
 -   **Breadcrumb Navigation**: See the current directory path.
 -   **Responsive Design**: Optimized for various screen sizes using Tailwind CSS.
+-   **File Upload**: Upload new files to a specified directory.
+-   **Folder Creation**: Create new folders and navigate into them.
+-   **File Preview**: Preview supported file types.
+-   **Search Functionality**: Search for files and folders within the current directory.
 
 ---
 
@@ -72,6 +76,21 @@ Visit `http://localhost:8000/explorer` to use the application.
 
 -   Click on a directory name to navigate into it.
 -   Files and subdirectories in the current directory will be displayed.
+
+### File Upload
+
+-   Use the upload form to add new files to the current directory.
+-   The upload progress bar provides feedback on the upload status.
+
+### Folder Creation
+
+-   Use the folder creation form to create new folders.
+-   Navigate directly to the new folder after creation.
+
+### Search Functionality
+
+-   Search for files or folders by typing in the search bar.
+-   Results will be filtered dynamically.
 
 ---
 
