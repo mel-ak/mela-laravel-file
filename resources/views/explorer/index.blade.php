@@ -11,10 +11,15 @@
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-2xl font-bold mb-4">Mela File Explorer</h1>
 
-        <!-- Error Messages -->
+        <!-- Error & Success Messages -->
         @if ($errors->any())
             <div class="bg-red-100 text-red-800 p-4 rounded mb-4">
                 {{ $errors->first() }}
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -26,7 +31,7 @@
                        class="text-blue-500 hover:underline">{{ $crumb }}</a>
                     <span class="text-gray-400">/</span>
                 @else
-                    <span class="text-gray-700">{{ $crumb }}</span>
+                    <span class="font-bold">{{ $crumb }}</span>
                 @endif
             @endforeach
         </nav>
@@ -39,8 +44,12 @@
         <form action="{{ route('explorer.upload') }}" method="POST" enctype="multipart/form-data" class="mb-6">
             @csrf
             <input type="hidden" name="path" value="{{ $path }}">
-            <input type="file" name="file" class="mb-2">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
+            <div class="flex items-center gap-4">
+                <input type="file" name="file" class="p-2 border rounded">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Upload
+                </button>
+            </div>
         </form>
 
         <!-- Upload Progress -->
@@ -49,39 +58,38 @@
         </div>
 
         <!-- File/Directory Listing -->
-        <ul class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            @foreach ($directories as $directory)
-                <li class="p-4 border rounded shadow hover:bg-gray-50">
-                    @php
-                        $fileIcons = [
-                            'txt' => '📄',
-                            'jpg' => '🖼️',
-                            'png' => '🖼️',
-                            'pdf' => '📚',
-                            'folder' => '📁',
-                        ];
-                        $extension = is_dir($path . '/' . $directory) ? 'folder' : pathinfo($directory, PATHINFO_EXTENSION);
-                    @endphp
+        @if (count($directories) === 0)
+            <p class="text-center text-gray-500">This directory is empty.</p>
+        @else
+            <ul class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @foreach ($directories as $directory)
+                    <li class="p-4 border rounded shadow hover:bg-gray-50">
+                        @php
+                            $fileIcons = [
+                                'txt' => '📄',
+                                'jpg' => '🖼️',
+                                'png' => '🖼️',
+                                'pdf' => '📚',
+                                'folder' => '📁',
+                            ];
+                            $extension = is_dir($path . '/' . $directory) ? 'folder' : pathinfo($directory, PATHINFO_EXTENSION);
+                        @endphp
 
-                    <a href="{{ is_dir($path . '/' . $directory) 
-                                ? route('explorer.navigate', ['path' => $path . '/' . $directory]) 
-                                : route('explorer.preview', ['file' => $path . '/' . $directory]) }}"
-                       class="block text-blue-500 font-semibold hover:underline">
-                        <span class="mr-2">{{ $fileIcons[$extension] ?? '📄' }}</span>{{ $directory }}
-                    </a>
+                        <a href="{{ is_dir($path . '/' . $directory) 
+                                    ? route('explorer.navigate', ['path' => $path . '/' . $directory]) 
+                                    : route('explorer.preview', ['file' => $path . '/' . $directory]) }}"
+                           class="block text-blue-500 font-semibold hover:underline">
+                            <span class="mr-2">{{ $fileIcons[$extension] ?? '📄' }}</span>{{ $directory }}
+                        </a>
 
-                    @if (!is_dir($path . '/' . $directory))
-                        <a href="{{ route('explorer.preview', ['file' => $path . '/' . $directory]) }}" target="_blank"
-                           class="text-sm text-gray-500 hover:underline">Preview</a>
-                    @endif
-                </li>
-            @endforeach
-        </ul>
-
-        <!-- Pagination -->
-        <div class="mt-4">
-            
-        </div>
+                        @if (!is_dir($path . '/' . $directory))
+                            <a href="{{ route('explorer.preview', ['file' => $path . '/' . $directory]) }}" target="_blank"
+                               class="text-sm text-gray-500 hover:underline">Preview</a>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 
     <script>
